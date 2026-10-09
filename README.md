@@ -7,12 +7,17 @@
 </p>
 
 <p align="center">
+  <a href="https://spectacular-sopapillas-9b9206.netlify.app/"><img src="https://img.shields.io/badge/Live_Demo-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo" /></a>
   <a href="https://github.com/Abhitechdev/cinematic-heist-experience"><img src="https://img.shields.io/badge/Repository-cinematic--heist--experience-c91414?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repo" /></a>
   <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" /></a>
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/React_18-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" /></a>
   <a href="https://threejs.org/"><img src="https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js" /></a>
   <a href="https://greensock.com/gsap/"><img src="https://img.shields.io/badge/GSAP_3-88CE02?style=for-the-badge&logo=greensock&logoColor=white" alt="GSAP" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /></a>
+</p>
+
+<p align="center">
+  🌐 <strong>Live Website:</strong> <a href="https://spectacular-sopapillas-9b9206.netlify.app/"><strong>https://spectacular-sopapillas-9b9206.netlify.app/</strong></a>
 </p>
 
 <p align="center">
@@ -175,6 +180,7 @@
 
 [![GitHub Profile](https://img.shields.io/badge/GitHub-Abhitechdev-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Abhitechdev)
 [![Repository](https://img.shields.io/badge/Project-cinematic--heist--experience-c91414?style=for-the-badge&logo=git&logoColor=white)](https://github.com/Abhitechdev/cinematic-heist-experience)
+[![Live Site](https://img.shields.io/badge/Live_Site-Visit_Demo-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://spectacular-sopapillas-9b9206.netlify.app/)
 
 *Passionate about building high-fidelity cinematic web experiences, interactive 3D WebGL environments, and next-generation frontend architectures.*
 

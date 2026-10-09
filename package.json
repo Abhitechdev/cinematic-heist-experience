@@ -1,7 +1,8 @@
 {
-  "name": "temp_app",
+  "name": "cinematic-heist-experience",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "homepage": "https://spectacular-sopapillas-9b9206.netlify.app/",
   "type": "module",
   "scripts": {
     "dev": "vite",
