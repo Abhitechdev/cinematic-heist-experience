@@ -8,10 +8,32 @@ import { DecryptedText } from '../react-bits/DecryptedText';
 
 export const CrewSection: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState<CrewMember>(CREW_MEMBERS[0]);
+  const [isPlayingQuote, setIsPlayingQuote] = useState(false);
+  const [deployedMembers, setDeployedMembers] = useState<Record<string, boolean>>({
+    professor: true,
+    berlin: true,
+  });
 
   const handleSelect = (member: CrewMember) => {
     soundEngine.playRadarPing(720);
     setSelectedMember(member);
+    setIsPlayingQuote(false);
+  };
+
+  const handlePlayVoiceIntercept = () => {
+    soundEngine.playRadioVoiceIntercept();
+    setIsPlayingQuote(true);
+    setTimeout(() => {
+      setIsPlayingQuote(false);
+    }, 2800);
+  };
+
+  const handleToggleDeploy = (id: string) => {
+    soundEngine.playClick();
+    setDeployedMembers((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
 
   return (
@@ -338,18 +360,70 @@ export const CrewSection: React.FC = () => {
                 {selectedMember.description}
               </p>
 
+              {/* Audio Voice Intercept Player */}
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: '11px',
-                  color: '#858585',
+                  backgroundColor: 'rgba(15, 6, 6, 0.75)',
+                  border: isPlayingQuote ? '1px solid #ef4444' : '1px solid rgba(255, 255, 255, 0.1)',
+                  padding: '14px 16px',
+                  borderRadius: '2px',
+                  marginBottom: '16px',
+                  transition: 'all 0.2s ease',
                 }}
               >
-                <Activity size={14} color="#c91414" />
-                <span>SECURE ENCRYPTED COMMS: {selectedMember.audioFreq}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c91414', fontSize: '11px', fontFamily: "'DM Mono', monospace" }}>
+                    <Radio size={13} />
+                    <span>SECURE FREQ: {selectedMember.audioFreq}</span>
+                  </div>
+                  {isPlayingQuote && (
+                    <span className="font-mono-tech" style={{ fontSize: '10px', color: '#ef4444', animation: 'beaconPulse 0.8s infinite' }}>
+                      TRANSMITTING LIVE...
+                    </span>
+                  )}
+                </div>
+
+                <div style={{ fontStyle: 'italic', color: isPlayingQuote ? '#ffffff' : '#cfcac2', fontSize: '0.92rem', marginBottom: '12px', lineHeight: 1.5 }}>
+                  "{selectedMember.quote}"
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={handlePlayVoiceIntercept}
+                    style={{
+                      backgroundColor: isPlayingQuote ? '#c91414' : 'rgba(30, 10, 10, 0.8)',
+                      border: '1px solid #c91414',
+                      color: '#ffffff',
+                      padding: '6px 14px',
+                      borderRadius: '2px',
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: '11px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <Activity size={12} />
+                    <span>{isPlayingQuote ? 'MONITORING COMMS...' : 'PLAY COMMS INTERCEPT'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleToggleDeploy(selectedMember.id)}
+                    style={{
+                      backgroundColor: deployedMembers[selectedMember.id] ? '#166534' : 'rgba(20, 24, 30, 0.8)',
+                      border: deployedMembers[selectedMember.id] ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.15)',
+                      color: deployedMembers[selectedMember.id] ? '#86efac' : '#bbb',
+                      padding: '6px 14px',
+                      borderRadius: '2px',
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: '11px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {deployedMembers[selectedMember.id] ? '✓ ACTIVE IN SQUAD' : '+ ASSIGN TO MISSION'}
+                  </button>
+                </div>
               </div>
             </div>
 

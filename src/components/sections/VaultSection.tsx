@@ -1,5 +1,4 @@
-import React from 'react';
-import { KeyRound, ChevronRight, Sparkles, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { KeyRound, ChevronRight, Sparkles, ShieldAlert, CheckCircle2, RotateCcw } from 'lucide-react';
 import { soundEngine } from '../../lib/soundEngine';
 import { VaultTerminal } from '../react-bits/VaultTerminal';
 import { DecryptedText } from '../react-bits/DecryptedText';
@@ -13,6 +12,7 @@ interface VaultSectionProps {
   vaultState?: VaultState;
   onEnterTreasury?: () => void;
   onProceedToEscape?: () => void;
+  onResetVault?: () => void;
 }
 
 export const VaultSection: React.FC<VaultSectionProps> = ({
@@ -23,6 +23,7 @@ export const VaultSection: React.FC<VaultSectionProps> = ({
   vaultState = 'AWAITING_PASSWORD',
   onEnterTreasury,
   onProceedToEscape,
+  onResetVault,
 }) => {
   const isOpeningOrUnlocking =
     vaultState === 'UNLOCKING' ||
@@ -380,6 +381,43 @@ export const VaultSection: React.FC<VaultSectionProps> = ({
                 >
                   <span>BLIMP ESCAPE SEQUENCE</span>
                   <ChevronRight size={18} />
+                </button>
+              )}
+
+              {onResetVault && (
+                <button
+                  onClick={() => {
+                    soundEngine.playClick();
+                    onResetVault();
+                  }}
+                  data-cursor="explore"
+                  title="Reset vault lock to re-enter passcode"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    backgroundColor: 'rgba(25, 28, 36, 0.85)',
+                    color: '#c0c0c0',
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: '1.3rem',
+                    letterSpacing: '0.1em',
+                    padding: '14px 22px',
+                    borderRadius: '2px',
+                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(40, 44, 56, 0.95)';
+                    e.currentTarget.style.color = '#ffffff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(25, 28, 36, 0.85)';
+                    e.currentTarget.style.color = '#c0c0c0';
+                  }}
+                >
+                  <RotateCcw size={16} />
+                  <span>RE-LOCK VAULT // REPLAY SEQUENCE</span>
                 </button>
               )}
             </div>

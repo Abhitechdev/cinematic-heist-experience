@@ -838,6 +838,69 @@ class SoundEngine {
     } catch {}
   }
 
+  // Sound Effect: Motorized CCTV Camera Servo Whine
+  public playCameraServo() {
+    if (this.isMuted || !this.ctx || !this.masterGain) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(380, now);
+      osc.frequency.exponentialRampToValueAtTime(460, now + 0.12);
+
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start(now);
+      osc.stop(now + 0.2);
+    } catch {}
+  }
+
+  // Sound Effect: CRT Monitor Glitch / Surveillance Static Burst
+  public playStaticGlitch() {
+    if (this.isMuted || !this.ctx || !this.masterGain) return;
+    try {
+      const now = this.ctx.currentTime;
+      const bufferSize = this.ctx.sampleRate * 0.08;
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1200, now);
+      filter.Q.setValueAtTime(1.5, now);
+
+      const gain = this.ctx.createGain();
+      gain.gain.setValueAtTime(0.09, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.masterGain);
+      noise.start(now);
+    } catch {}
+  }
+
+  // Sound Effect: Radio Voice Intercept squelch and chirp
+  public playRadioVoiceIntercept() {
+    if (this.isMuted || !this.ctx || !this.masterGain) return;
+    try {
+      this.playStaticGlitch();
+      this.playRadarPing(920);
+      setTimeout(() => {
+        if (!this.isMuted) this.playStaticGlitch();
+      }, 350);
+    } catch {}
+  }
+
   // Sound Effect: Continuous Cascading Banknote Flutter
   public playMoneyRainCascade() {
     if (this.isMuted || !this.ctx || !this.masterGain) return;

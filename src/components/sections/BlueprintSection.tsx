@@ -6,9 +6,30 @@ import { soundEngine } from '../../lib/soundEngine';
 import { DecryptedText } from '../react-bits/DecryptedText';
 import { BlueprintModel3D } from '../three/BlueprintModel3D';
 
-export const BlueprintSection: React.FC = () => {
+interface BlueprintSectionProps {
+  onNavigateSection?: (sectionId: string) => void;
+}
+
+export const BlueprintSection: React.FC<BlueprintSectionProps> = ({ onNavigateSection }) => {
   const [activeNode, setActiveNode] = useState<BlueprintNode>(BLUEPRINT_NODES[0]);
   const [viewMode, setViewMode] = useState<'3d' | '2d'>('3d');
+
+  const getNodeDestination = (id: string): string => {
+    switch (id) {
+      case 'entry':
+        return 'target';
+      case 'security':
+        return 'crew';
+      case 'control':
+        return 'rules';
+      case 'vault':
+        return 'vault';
+      case 'exit':
+        return 'final-plan';
+      default:
+        return 'target';
+    }
+  };
 
   const handleNodeClick = (node: BlueprintNode) => {
     soundEngine.playRadarPing(840);
@@ -351,6 +372,38 @@ export const BlueprintSection: React.FC = () => {
                 </li>
               ))}
             </ul>
+
+            {onNavigateSection && (
+              <button
+                onClick={() => {
+                  soundEngine.playRadarPing(920);
+                  onNavigateSection(getNodeDestination(activeNode.id));
+                }}
+                data-cursor="explore"
+                style={{
+                  marginTop: '16px',
+                  width: '100%',
+                  backgroundColor: '#c91414',
+                  border: '1px solid #ff4444',
+                  color: '#ffffff',
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.12em',
+                  padding: '10px 14px',
+                  borderRadius: '2px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: '0 0 16px rgba(201, 20, 20, 0.45)',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <span>INFILTRATE {activeNode.code}: ENTER SCENE →</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

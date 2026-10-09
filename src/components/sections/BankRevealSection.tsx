@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Building2, ShieldAlert, Eye, ScanLine } from 'lucide-react';
 import { soundEngine } from '../../lib/soundEngine';
 import { InteractiveBankModel3D, type SectorTarget } from '../three/InteractiveBankModel3D';
+import { CCTVSurveillanceTerminal } from '../common/CCTVSurveillanceTerminal';
 
 interface Hotspot {
   id: string;
@@ -9,6 +10,10 @@ interface Hotspot {
   code: string;
   intel: string;
   risk: 'CRITICAL' | 'MODERATE' | 'HIGH';
+}
+
+interface BankRevealSectionProps {
+  onNavigateSection?: (sectionId: string) => void;
 }
 
 const BANK_HOTSPOTS: Hotspot[] = [
@@ -49,8 +54,9 @@ const BANK_HOTSPOTS: Hotspot[] = [
   },
 ];
 
-export const BankRevealSection: React.FC = () => {
+export const BankRevealSection: React.FC<BankRevealSectionProps> = ({ onNavigateSection }) => {
   const [activeHotspot, setActiveHotspot] = useState<Hotspot>(BANK_HOTSPOTS[0]);
+  const [viewMode, setViewMode] = useState<'3d_model' | 'cctv_feeds'>('3d_model');
 
   const handleSelectSector = (sec: SectorTarget) => {
     soundEngine.playRadarPing(920);
@@ -77,65 +83,117 @@ export const BankRevealSection: React.FC = () => {
     >
       <div style={{ maxWidth: '1300px', margin: '0 auto', width: '100%' }}>
         {/* Section Header */}
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-            <span className="dossier-tag">
-              <Building2 size={12} />
-              THE TARGET // ARCHITECTURAL REVEAL
-            </span>
-            <span
-              className="font-mono-tech"
+        <div style={{ marginBottom: '24px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '16px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+              <span className="dossier-tag">
+                <Building2 size={12} />
+                THE TARGET // ARCHITECTURAL REVEAL
+              </span>
+              <span
+                className="font-mono-tech"
+                style={{
+                  color: '#858585',
+                  fontSize: '11px',
+                  letterSpacing: '0.15em',
+                }}
+              >
+                3D RECONNAISSANCE & CCTV GRID
+              </span>
+            </div>
+
+            <h2
+              className="font-display"
               style={{
-                color: '#858585',
-                fontSize: '11px',
-                letterSpacing: '0.15em',
+                fontSize: 'clamp(2.8rem, 6vw, 5.2rem)',
+                lineHeight: 0.95,
+                color: '#f2eee7',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
               }}
             >
-              3D PERSPECTIVE RECONNAISSANCE
-            </span>
+              THE ROYAL <span style={{ color: '#c91414' }}>MINT</span>
+            </h2>
+
+            <p
+              style={{
+                color: '#858585',
+                maxWidth: '650px',
+                fontSize: '1.05rem',
+                marginTop: '14px',
+                lineHeight: 1.6,
+              }}
+            >
+              An unyielding neoclassical fortress of steel, granite, and surveillance optics.
+              Switch between the interactive 3D architectural block and real-time intercepted CCTV camera feeds.
+            </p>
           </div>
 
-          <h2
-            className="font-display"
-            style={{
-              fontSize: 'clamp(2.8rem, 6vw, 5.2rem)',
-              lineHeight: 0.95,
-              color: '#f2eee7',
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-            }}
-          >
-            THE ROYAL <span style={{ color: '#c91414' }}>MINT</span>
-          </h2>
-
-          <p
-            style={{
-              color: '#858585',
-              maxWidth: '650px',
-              fontSize: '1.05rem',
-              marginTop: '14px',
-              lineHeight: 1.6,
-            }}
-          >
-            An unyielding neoclassical fortress of steel, granite, and surveillance optics.
-            Inspect the 3D architectural block below — click any security room or sector to glide directly inside.
-          </p>
+          {/* Mode Selector Tabs */}
+          <div style={{ display: 'flex', gap: '8px', backgroundColor: 'rgba(12, 14, 18, 0.85)', padding: '4px', border: '1px solid rgba(255, 255, 255, 0.12)', borderRadius: '2px' }}>
+            <button
+              onClick={() => {
+                soundEngine.playClick();
+                setViewMode('3d_model');
+              }}
+              style={{
+                backgroundColor: viewMode === '3d_model' ? '#c91414' : 'transparent',
+                color: viewMode === '3d_model' ? '#fff' : '#888',
+                border: 'none',
+                padding: '6px 14px',
+                borderRadius: '2px',
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '11px',
+                letterSpacing: '0.12em',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              3D BLOCK MODEL
+            </button>
+            <button
+              onClick={() => {
+                soundEngine.playStaticGlitch();
+                setViewMode('cctv_feeds');
+              }}
+              style={{
+                backgroundColor: viewMode === 'cctv_feeds' ? '#c91414' : 'transparent',
+                color: viewMode === 'cctv_feeds' ? '#fff' : '#888',
+                border: 'none',
+                padding: '6px 14px',
+                borderRadius: '2px',
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '11px',
+                letterSpacing: '0.12em',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              CCTV FEEDS (LIVE)
+            </button>
+          </div>
         </div>
 
-        {/* 3D Interactive Building Showcase Frame (Real Three.js Neoclassical Wireframe & Clickable Rooms) */}
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: 'clamp(460px, 56vw, 640px)',
-            marginBottom: '32px',
-          }}
-        >
-          <InteractiveBankModel3D
-            activeSectorId={activeHotspot.id}
-            onSelectSector={handleSelectSector}
-          />
-        </div>
+        {/* Viewport: Either 3D Interactive Building Showcase OR CCTV Surveillance Terminal */}
+        {viewMode === '3d_model' ? (
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: 'clamp(460px, 56vw, 640px)',
+              marginBottom: '32px',
+            }}
+          >
+            <InteractiveBankModel3D
+              activeSectorId={activeHotspot.id}
+              onSelectSector={handleSelectSector}
+            />
+          </div>
+        ) : (
+          <div style={{ marginBottom: '32px' }}>
+            <CCTVSurveillanceTerminal onNavigateSection={onNavigateSection} />
+          </div>
+        )}
 
         {/* Selected Sector Intel Panel */}
         <div

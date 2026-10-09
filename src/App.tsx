@@ -178,6 +178,19 @@ export const App: React.FC = () => {
     handleNavigate('rules');
   };
 
+  const handleResetVaultOnly = () => {
+    if (vaultTimelineRef.current) {
+      vaultTimelineRef.current.kill();
+    }
+    setIsVaultUnlocked(false);
+    setVaultSequenceProgress(0);
+    setCinematicVaultMode(false);
+    setVaultState('AWAITING_PASSWORD');
+    soundEngine.stopCinematicAmbient();
+    soundEngine.playHeavyMechanicalClank();
+    soundEngine.playRadarPing(650);
+  };
+
   const handleReplay = () => {
     if (vaultTimelineRef.current) {
       vaultTimelineRef.current.kill();
@@ -249,10 +262,10 @@ export const App: React.FC = () => {
       {/* Main Cinematic Scroll Storyline */}
       <main style={{ position: 'relative', zIndex: 1, width: '100%', overflowX: 'hidden' }}>
         <HeroSection onExploreClick={() => handleNavigate('target')} />
-        <BankRevealSection />
+        <BankRevealSection onNavigateSection={handleNavigate} />
         <CrewSection />
         <CinematicInterludeSection />
-        <BlueprintSection />
+        <BlueprintSection onNavigateSection={handleNavigate} />
         <VaultSection
           isVaultUnlocked={isVaultUnlocked}
           onVaultUnlock={handleVaultUnlock}
@@ -261,6 +274,7 @@ export const App: React.FC = () => {
           vaultState={vaultState}
           onEnterTreasury={handleEnterTreasury}
           onProceedToEscape={() => handleNavigate('final-plan')}
+          onResetVault={handleResetVaultOnly}
         />
         <HeistSection />
         <RulesSection />
